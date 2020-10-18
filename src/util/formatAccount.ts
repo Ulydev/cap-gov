@@ -1,0 +1,1 @@
+export const formatAccount = (account?: string | null) => `${account?.substr(0, 4+2)}...${account?.substr(-4)}`
