@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from "react"
+import React, { FunctionComponent, useEffect, useMemo, useReducer } from "react"
 import { AiOutlineLoading } from "react-icons/ai"
 import { Proposal as ProposalType, ProposalState, useProposal } from "../../hooks/useProposal"
 import { useWeb3Result } from "../../hooks/useWeb3Result"
@@ -16,7 +16,34 @@ import { useStoreActions } from "../../state/hooks"
 import { getTokenContract, useContract } from "../../hooks/useContract"
 import { useWeb3React } from "@web3-react/core"
 
-const VoteButton: FunctionComponent<{ proposal: ProposalType }> = ({ proposal }) => {
+import { RiExternalLinkLine } from "react-icons/ri"
+
+const useCountdown = (targetTimestamp: number) => {
+
+    const [, forceUpdate] = useReducer(x => x + 1, 0)
+    useEffect(() => {
+        const timer = setTimeout(() => forceUpdate(), 1000)
+        return () => clearTimeout(timer)
+    })
+
+    if (!targetTimestamp) return null
+
+    const calculateTimeLeft = () => {
+        const difference = targetTimestamp * 1000 - +Date.now()
+        const remaining: { h?: number, m?: number, s?: number } = {}
+        if (difference > 0) {
+            remaining.h = Math.floor((difference / (1000 * 60 * 60)))
+            remaining.m = Math.floor((difference / (1000 * 60)) % 60)
+            remaining.s = Math.floor((difference / 1000) % 60)
+        }
+        return [difference, remaining]
+    }
+    const [difference, remaining] = calculateTimeLeft()
+
+    return difference > 0 ? Object.entries(remaining).filter(([key, value]) => value > 0).map(([key, value]) => `${ value }${ key }`).join(" ") : "0s"
+}
+
+const VoteButton: FunctionComponent<{ proposal: ProposalType, endTimestamp: number }> = ({ proposal, endTimestamp }) => {
 
     const { account, library } = useWeb3React()
 
@@ -41,14 +68,17 @@ const VoteButton: FunctionComponent<{ proposal: ProposalType }> = ({ proposal })
     return (
         <div
             className={classnames(
-                "flex flex-row w-full text-2xl font-bold justify-between space-x-2"
+                "flex flex-row w-full text-2xl font-bold justify-between space-x-2 items-end"
             )}>
-            <span className="border-b-2 border-gray-500 flex-1 text-left">Voting</span>
+            <div className="flex flex-col flex-1 border-b-2 border-gray-500 flex-1 text-left pb-1">
+                <span>Voting</span>
+                <span className="text-xs text-gray-800 font-normal">ends in { useCountdown(endTimestamp) }</span>
+            </div>
             { needsAllowance ? (
                 <button onClick={allowSpend} className="text-gray-500 border-b-2 px-4 border-gray-500 hover:text-white hover:bg-gray-500 transition duration-500">Approve CAP</button>
             ) : <>
-                <button onClick={() => castVote(true)} className="text-green-500 border-b-2 w-20 border-green-500 hover:text-white hover:bg-green-500 transition duration-500">Yes</button>
-                <button onClick={() => castVote(false)} className="text-red-500 border-b-2 w-20 border-red-500 hover:text-white hover:bg-red-500 transition duration-500">No</button>
+                <button onClick={() => castVote(true)} className="text-green-500 border-b-2 w-20 border-green-500 hover:text-white hover:bg-green-500 transition duration-500 pt-1">Yes</button>
+                <button onClick={() => castVote(false)} className="text-red-500 border-b-2 w-20 border-red-500 hover:text-white hover:bg-red-500 transition duration-500 pt-1">No</button>
             </> }
         </div>
     )
@@ -84,7 +114,7 @@ const ProposalView: FunctionComponent<{ proposal: ProposalType }> = ({ proposal 
     const expirationTimestamp = useWeb3Result(async ({ account, library }) => await getOrEstimateBlockTimestamp(proposal.expirationBlock, library))
 
     const Status = proposal.state === ProposalState.Active ? (
-        <VoteButton proposal={proposal} />
+        <VoteButton proposal={proposal} endTimestamp={endTimestamp} />
     ) : (() => {
         const [label, icon, color, onClick] = (() => {
             switch (proposal.state) {
@@ -108,7 +138,9 @@ const ProposalView: FunctionComponent<{ proposal: ProposalType }> = ({ proposal 
                 </div>
                 <div className="flex flex-row justify-between text-sm mt-8">
                     <span className="text-gray-800">Proposed by</span>
-                    <span className="text-gray-500">{ formatAccount(proposal.proposer) }</span>
+                    <a className="text-gray-500 flex flex-row items-center space-x-1 hover:text-green-500" href={`https://ropsten.etherscan.io/address/${proposal.proposer}`} target="_blank" rel="noreferrer noopener">
+                        <span>{ formatAccount(proposal.proposer) }</span><RiExternalLinkLine className="text-gray-800" />
+                    </a>
                 </div>
                 <div className="flex flex-col mt-2">
                     <div className="flex flex-row justify-between text-sm">
@@ -134,7 +166,7 @@ const ProposalView: FunctionComponent<{ proposal: ProposalType }> = ({ proposal 
                     <div className="bg-green-900 h-full" style={{ width: `${percentageVoted}%` }} />
                 </div>
             </div>
-            <div className="flex flex-row mt-8">
+            <div className="flex flex-row mt-8 h-16 items-end">
                 { Status }
             </div>
         </div>
