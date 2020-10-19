@@ -3,12 +3,13 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import "./index.css"
 import "react-toastify/dist/ReactToastify.min.css";
-
-import './tailwind.generated.css';
 import "react-grid-layout/css/styles.css"
 import "react-resizable/css/styles.css"
+
+import './tailwind.generated.css';
+import "./index.css"
+
 import ReactModal from 'react-modal';
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
