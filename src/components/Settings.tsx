@@ -1,6 +1,6 @@
 import { CurrencyAmount, JSBI } from "@uniswap/sdk"
-import { parseEther, parseUnits } from "ethers/lib/utils"
-import React, { useEffect, useMemo, useState } from "react"
+import { parseEther } from "ethers/lib/utils"
+import React, { useEffect, useState } from "react"
 import { useContract } from "../hooks/useContract"
 import { useWeb3Result } from "../hooks/useWeb3Result"
 import { useStoreActions } from "../state/hooks"

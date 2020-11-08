@@ -7,8 +7,7 @@ import { useEagerConnect } from './hooks/useEagerConnect';
 import { useInactiveListener } from './hooks/useInactiveListener';
 import { useWeb3React } from '@web3-react/core';
 import ActivatePrompt from './components/ActivatePrompt';
-import GlobalModal from './components/GlobalModal';
-import { BrowserRouter as Router, Redirect, Route, useParams } from "react-router-dom"
+import { BrowserRouter as Router, Redirect, Route } from "react-router-dom"
 import Header from './components/Header';
 import NetworkPrompt from './components/NetworkPrompt';
 import BlockNumberUpdater from './components/BlockNumberUpdater';
@@ -22,7 +21,6 @@ import OldestProposals from './components/proposals/OldestProposals';
 import NewProposal from './components/proposals/NewProposal';
 import Container from './components/Container';
 import Footer from './components/Footer';
-import Proposal from './components/proposals/Proposal';
 import ProposalRoute from './components/proposals/ProposalRoute';
 import Settings from './components/Settings';
 

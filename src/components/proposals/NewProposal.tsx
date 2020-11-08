@@ -4,10 +4,9 @@ import classnames from "classnames"
 import ProposalsHeader from "./ProposalsHeader"
 
 import { useFieldArray, useForm } from "react-hook-form"
-import { FiMinus, FiPlus, FiPlusCircle } from "react-icons/fi"
+import { FiMinus, FiPlus } from "react-icons/fi"
 import { useWeb3Result } from "../../hooks/useWeb3Result"
 import { useContract } from "../../hooks/useContract"
-import { Proposal } from "../../hooks/useProposal"
 import { useStoreActions } from "../../state/hooks"
 import { toUtf8Bytes } from "ethers/lib/utils"
 
@@ -23,7 +22,7 @@ type ProposalValues = {
 }
 
 const ProposalForm = () => {
-    const { register, control, handleSubmit, watch, errors } = useForm<ProposalValues>({ defaultValues: { operations: [{}] } })
+    const { register, control, handleSubmit } = useForm<ProposalValues>({ defaultValues: { operations: [{}] } })
     const { fields: operations, append: addOperation, remove: removeOperation } = useFieldArray({ control, name: "operations" })
 
     const contract = useContract()

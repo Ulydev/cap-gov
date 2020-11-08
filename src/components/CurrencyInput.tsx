@@ -1,4 +1,4 @@
-import React, { ComponentProps, FunctionComponent } from "react"
+import React, { FunctionComponent } from "react"
 
 const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 const pattern = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group

@@ -11,7 +11,7 @@ import { useStoreActions } from "../state/hooks"
 import { toast } from "react-toastify"
 import { formatAccount } from "../util/formatAccount"
 import { ChainId } from "@uniswap/sdk"
-import { Link, NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 
 const Account = () => {
     const { account, deactivate, library } = useWeb3React()
