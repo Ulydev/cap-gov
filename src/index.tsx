@@ -9,6 +9,7 @@ import "react-resizable/css/styles.css"
 
 import './tailwind.generated.css';
 import "./index.css"
+import "pattern.css/dist/pattern.min.css"
 
 import ReactModal from 'react-modal';
 import { Web3ReactProvider } from '@web3-react/core';
