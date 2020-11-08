@@ -17,6 +17,8 @@ import { getTokenContract, useContract } from "../../hooks/useContract"
 import { useWeb3React } from "@web3-react/core"
 
 import { RiExternalLinkLine } from "react-icons/ri"
+import { Link } from "react-router-dom"
+import { truncate } from "../../util/truncate"
 
 const useCountdown = (targetTimestamp: number) => {
 
@@ -71,7 +73,7 @@ const VoteButton: FunctionComponent<{ proposal: ProposalType, endTimestamp: numb
                 "flex flex-row w-full text-2xl font-bold justify-between space-x-2 items-end"
             )}>
             <div className="flex flex-col flex-1 border-b-2 border-gray-500 flex-1 text-left pb-1">
-                <span>Voting</span>
+                <span className="text-gray-500">Voting</span>
                 <span className="text-xs text-gray-800 font-normal">ends in { useCountdown(endTimestamp) }</span>
             </div>
             { needsAllowance ? (
@@ -98,7 +100,7 @@ const StatusButton: FunctionComponent<{ label: string, onClick: (() => any) | n
     )
 }
 
-const ProposalView: FunctionComponent<{ proposal: ProposalType }> = ({ proposal }) => {
+const ProposalView: FunctionComponent<{ proposal: ProposalType, full: boolean }> = ({ proposal, full }) => {
 
     const hasVotes = useMemo(() => !proposal.forVotes.add(proposal.againstVotes).isZero(), [proposal])
     const percentageVoted = useMemo(() => {
@@ -118,7 +120,9 @@ const ProposalView: FunctionComponent<{ proposal: ProposalType }> = ({ proposal 
     ) : (() => {
         const [label, icon, color, onClick] = (() => {
             switch (proposal.state) {
-                case ProposalState.Executable: return ["Executable", AiOutlineClockCircle, "text-green-500 border-green-500", null]
+                case ProposalState.Executable: return ["Executable", AiOutlineClockCircle, "text-green-500 border-green-500", async () => {
+                    console.log("")
+                }]
                 case ProposalState.Expired: return ["Expired", IoIosCloseCircleOutline, "text-red-900 border-red-900", null]
                 case ProposalState.Executed: return ["Executed", IoIosCheckmarkCircleOutline, "text-green-900 border-green-900", null]
                 case ProposalState.Canceled: return ["Canceled", IoIosCloseCircleOutline, "text-red-900 border-red-900", null]
@@ -132,13 +136,14 @@ const ProposalView: FunctionComponent<{ proposal: ProposalType }> = ({ proposal 
     return (
         <div className="flex flex-col">
             <div className="flex flex-col">
-                <div className="flex flex-row justify-between space-x-2">
-                    <h1 className="flex-1 font-bold text-white" style={{ minHeight: "4rem" }}>{ proposal.description }</h1>
+                <div className="relative flex flex-row justify-between space-x-2">
+                    <div className="absolute pattern-dots-sm text-green-500 text-opacity-50 left-0 top-0 w-8 h-8 -ml-2 -mt-1" />
+                    <Link to={`/proposal/${proposal.id}`} className="flex-1 font-bold text-white hover:text-green-500" style={{ minHeight: "4rem" }}>{ full ? proposal.description : truncate(proposal.description, 44) }</Link>
                     <span className="text-gray-800">#{ proposal.id.toNumber() }</span>
                 </div>
                 <div className="flex flex-row justify-between text-sm mt-8">
                     <span className="text-gray-800">Proposed by</span>
-                    <a className="text-gray-500 flex flex-row items-center space-x-1 hover:text-green-500" href={`https://ropsten.etherscan.io/address/${proposal.proposer}`} target="_blank" rel="noreferrer noopener">
+                    <a className="text-gray-500 flex flex-row items-center space-x-1 hover:text-green-500 transition duration-200" href={`https://ropsten.etherscan.io/address/${proposal.proposer}`} target="_blank" rel="noreferrer noopener">
                         <span>{ formatAccount(proposal.proposer) }</span><RiExternalLinkLine className="text-gray-800" />
                     </a>
                 </div>
@@ -173,11 +178,11 @@ const ProposalView: FunctionComponent<{ proposal: ProposalType }> = ({ proposal 
     )
 }
 
-const Proposal: FunctionComponent<{ id: number }> = ({ id }) => {
+const Proposal: FunctionComponent<{ id: number, full?: boolean }> = ({ id, full = false }) => {
     const proposal = useProposal(id)
     return (
         <div className={classnames("flex flex-col p-4 shadow-lg bg-gray-900 bg-opacity-25 border-b-2 border-green-900", !proposal && "items-center justify-center")}>
-            { proposal ? <ProposalView proposal={proposal} /> : <AiOutlineLoading className="animate-spin mx-auto text-2xl text-green-500" /> }
+            { proposal ? <ProposalView proposal={proposal} full={full} /> : <AiOutlineLoading className="animate-spin mx-auto text-2xl text-green-500" /> }
         </div>
     )
 }
