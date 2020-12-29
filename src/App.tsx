@@ -23,6 +23,7 @@ import Container from './components/Container';
 import Footer from './components/Footer';
 import ProposalRoute from './components/proposals/ProposalRoute';
 import Settings from './components/Settings';
+import { contractAddresses } from './constants';
 
 const ActiveApp = () => {
     const pendingTransactions = useStoreState(state => state.pendingTransactions)
@@ -64,7 +65,7 @@ function App() {
     const triedEager = useEagerConnect()
     useInactiveListener(!triedEager)
 
-    const correctNetwork = chainId?.toString() === process.env.REACT_APP_CHAIN_ID
+    const correctNetwork = !!contractAddresses[chainId!]
 
     return (
         <StoreProvider store={store}>

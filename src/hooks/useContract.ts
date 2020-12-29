@@ -4,13 +4,14 @@ import { useMemo } from "react"
 
 import capGovernance from "../CapGovernance.json"
 import capToken from "../CapToken.json"
+import { contractAddresses } from "../constants"
 
 export const useContract = () => {
-    const { account, library } = useWeb3React()
+    const { account, library, chainId } = useWeb3React()
     return useMemo(() => {
         const signer = library.getSigner(account).connectUnchecked()
-        return new Contract(process.env.REACT_APP_CONTRACT_ADDRESS!, capGovernance.result, signer)
-    }, [account, library])
+        return new Contract(contractAddresses[chainId!], capGovernance.result, signer)
+    }, [account, library, chainId])
 }
 
 export const useTokenContract = (address?: string | null) => {

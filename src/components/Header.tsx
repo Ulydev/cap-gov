@@ -14,7 +14,7 @@ import { ChainId } from "@uniswap/sdk"
 import { NavLink } from "react-router-dom"
 
 const Account = () => {
-    const { account, deactivate, library } = useWeb3React()
+    const { account, deactivate, library, chainId } = useWeb3React()
     const formattedAccount = formatAccount(account)
     const capBalance = useCapBalance()
 
@@ -42,11 +42,13 @@ const Account = () => {
             </div>
             <div className="flex flex-row items-center space-x-2 pr-1">
                 <span className="opacity-50 text-sm">{ capBalance?.toSignificant(4) } CAP</span>
-                <button
-                    onClick={requestFromFaucet}
-                    className="opacity-50 hover:opacity-100 transition duration-200 text-lg">
-                    <AiOutlinePlusCircle />
-                </button>
+                { chainId !== ChainId.MAINNET ?
+                    <button
+                        onClick={requestFromFaucet}
+                        className="opacity-50 hover:opacity-100 transition duration-200 text-lg">
+                        <AiOutlinePlusCircle />
+                    </button>
+                : null }
                 <NavLink
                     to="/settings"
                     className="opacity-50 hover:opacity-100 transition duration-200 text-lg">
@@ -63,13 +65,13 @@ const Account = () => {
 }
 
 const Header = () => {
-    const { account } = useWeb3React()
+    const { account, chainId } = useWeb3React()
     return <>
         <header className="flex flex-row mx-8 lg:mx-12 py-8 mb-12 lg:mb-0 text-white justify-between">
             <div className="flex flex-col space-y-1 items-start">
                 <img src={logo} alt="logo" className="w-16" />
                 <NavLink to="/" className="text-xl font-thin hover:text-green-500 transition duration-200">Governance</NavLink>
-                { process.env.REACT_APP_CHAIN_ID !== ChainId.MAINNET.toString() ? <span className="text-white text-xs p-0 px-2 bg-green-900 mt-6 inline-block opacity-50">{ ChainId[parseInt(process.env.REACT_APP_CHAIN_ID!)] }</span> : null }
+                <span className="text-white text-xs p-0 px-2 bg-green-900 mt-6 inline-block opacity-50">{ chainId ? ChainId[chainId] : "" }</span>
             </div>
             <div className="flex flex-row">
                 { account ? <Account /> : null }
