@@ -1,3 +1,4 @@
+import { ChainId } from "@uniswap/sdk"
 import { useWeb3React } from "@web3-react/core"
 import { useEffect, useState } from "react"
 import { useBlockNumber } from "./useBlockNumber"
@@ -15,7 +16,7 @@ export const useGovernanceTokenAddress = () => {
             let stale = false
             const refresh = async () => {
                 try {
-                    const value = await contract.token()
+                    const value = await (chainId === ChainId.ROPSTEN ? contract.governanceToken() : contract.token())
                     if (!stale) set(value)
                 } catch (e) {
                     console.error(e)

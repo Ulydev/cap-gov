@@ -19,6 +19,7 @@ import { useWeb3React } from "@web3-react/core"
 import { RiExternalLinkLine } from "react-icons/ri"
 import { Link } from "react-router-dom"
 import { truncate } from "../../util/truncate"
+import { ChainId } from "@uniswap/sdk"
 
 const useCountdown = (targetTimestamp: number) => {
 
@@ -47,7 +48,7 @@ const useCountdown = (targetTimestamp: number) => {
 
 const VoteButton: FunctionComponent<{ proposal: ProposalType, endTimestamp: number }> = ({ proposal, endTimestamp }) => {
 
-    const { account, library } = useWeb3React()
+    const { account, library, chainId } = useWeb3React()
 
     const addPendingTransaction = useStoreActions(actions => actions.addPendingTransaction)
     const contract = useContract()
@@ -56,14 +57,16 @@ const VoteButton: FunctionComponent<{ proposal: ProposalType, endTimestamp: numb
     }
 
     const needsAllowance = useWeb3Result(async ({ account, library }) => {
-        const tokenContract = getTokenContract(await contract.token(), account, library)
+        const tokenAddress = await (chainId === ChainId.ROPSTEN ? contract.governanceToken() : contract.token())
+        const tokenContract = getTokenContract(tokenAddress, account, library)
         const allowance = await tokenContract.allowance(account!, contract.address)
         const tokenBalance = await tokenContract.balanceOf(account!)
         return allowance.lt(tokenBalance)
     })
 
     const allowSpend = async () => {
-        const tokenContract = getTokenContract(await contract.token(), account!, library)
+        const tokenAddress = await (chainId === ChainId.ROPSTEN ? contract.governanceToken() : contract.token())
+        const tokenContract = getTokenContract(tokenAddress, account!, library)
         addPendingTransaction((await tokenContract.approve(contract.address, MaxUint256)).hash)
     }
 
