@@ -17,7 +17,7 @@ type ProposalValues = {
         address: string
         value: string
         signature: string
-        calldata: string
+        calldata?: string
     }[]
 }
 
@@ -36,7 +36,7 @@ const ProposalForm = () => {
             data.operations.map(o => o.address),
             data.operations.map(o => o.value),
             data.operations.map(o => o.signature),
-            data.operations.map(o => toUtf8Bytes(o.calldata)),
+            data.operations.map(o => o.calldata ? toUtf8Bytes(o.calldata) : undefined),
             data.description
         )).hash)
     }
@@ -101,7 +101,7 @@ const ProposalForm = () => {
                                     </div>
                                     <div className="flex flex-row space-x-2 items-center">
                                         <label className="flex-1" htmlFor={`operations[${index}].calldata`}>Calldata</label>
-                                        <input style={{ flex: 3 }} className="p-2 px-4 text-white bg-green-900 bg-opacity-25 border-green-500 border-b-2" name={`operations[${index}].calldata`} placeholder="Calldata" ref={register({ required: true })} />
+                                        <input style={{ flex: 3 }} className="p-2 px-4 text-white bg-green-900 bg-opacity-25 border-green-500 border-b-2" name={`operations[${index}].calldata`} placeholder="Calldata" ref={register({ required: false })} />
                                     </div>
                                 </div>
                             </div>
