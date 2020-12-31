@@ -15,7 +15,7 @@ export const useGovernanceTokenAddress = () => {
             let stale = false
             const refresh = async () => {
                 try {
-                    const value = await contract.governanceToken()
+                    const value = await contract.token()
                     if (!stale) set(value)
                 } catch (e) {
                     console.error(e)

@@ -1,12 +1,16 @@
 import { CurrencyAmount, JSBI } from "@uniswap/sdk"
+import { useWeb3React } from "@web3-react/core"
 import { parseEther } from "ethers/lib/utils"
 import React, { useEffect, useState } from "react"
-import { useContract } from "../hooks/useContract"
+import { getTokenContract, useContract } from "../hooks/useContract"
 import { useWeb3Result } from "../hooks/useWeb3Result"
 import { useStoreActions } from "../state/hooks"
 import CurrencyInput from "./CurrencyInput"
+import { MaxUint256 } from "@ethersproject/constants"
 
 const Settings = () => {
+
+    const { account, library } = useWeb3React()
 
     const contract = useContract()
     const stakedCap = useWeb3Result(async ({ account, library }) => (await contract.balanceOf(account)).toString())
@@ -15,7 +19,23 @@ const Settings = () => {
     useEffect(() => { if (stakedCap) setAmount(CurrencyAmount.ether(stakedCap).toExact()) }, [stakedCap])
 
     const addPendingTransaction = useStoreActions(actions => actions.addPendingTransaction)
+
+    const needsAllowance = useWeb3Result(async ({ account, library }) => {
+        const tokenContract = getTokenContract(await contract.token(), account, library)
+        const allowance = await tokenContract.allowance(account!, contract.address)
+        const tokenBalance = await tokenContract.balanceOf(account!)
+        return allowance.lt(tokenBalance)
+    })
+
+    const allowSpend = async () => {
+        const tokenContract = getTokenContract(await contract.token(), account!, library)
+        addPendingTransaction((await tokenContract.approve(contract.address, MaxUint256)).hash)
+    }
+
     const saveStake = async () => {
+        if (needsAllowance) {
+            await allowSpend()
+        }
         const cAmount = CurrencyAmount.ether(JSBI.BigInt(parseEther(amount!)))
         const cStakedCap = CurrencyAmount.ether(stakedCap)
         if (cAmount.greaterThan(cStakedCap)) {

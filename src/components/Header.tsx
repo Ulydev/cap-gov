@@ -23,7 +23,7 @@ const Account = () => {
     const addPendingTransaction = useStoreActions(actions => actions.addPendingTransaction)
 
     const requestFromFaucet = async () => {
-        const tokenAddress = await contract.governanceToken()
+        const tokenAddress = await contract.token()
         const tokenContract = getTokenContract(tokenAddress, account!, library)
         try {
             addPendingTransaction((await tokenContract.faucetRequest()).hash)

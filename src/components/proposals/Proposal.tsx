@@ -56,14 +56,14 @@ const VoteButton: FunctionComponent<{ proposal: ProposalType, endTimestamp: numb
     }
 
     const needsAllowance = useWeb3Result(async ({ account, library }) => {
-        const tokenContract = getTokenContract(await contract.governanceToken(), account, library)
+        const tokenContract = getTokenContract(await contract.token(), account, library)
         const allowance = await tokenContract.allowance(account!, contract.address)
         const tokenBalance = await tokenContract.balanceOf(account!)
         return allowance.lt(tokenBalance)
     })
 
     const allowSpend = async () => {
-        const tokenContract = getTokenContract(await contract.governanceToken(), account!, library)
+        const tokenContract = getTokenContract(await contract.token(), account!, library)
         addPendingTransaction((await tokenContract.approve(contract.address, MaxUint256)).hash)
     }
 
