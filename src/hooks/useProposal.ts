@@ -1,3 +1,5 @@
+import { ChainId } from "@uniswap/sdk"
+import { useWeb3React } from "@web3-react/core"
 import { BigNumber } from "ethers"
 import { useContract } from "./useContract"
 import { useWeb3Result } from "./useWeb3Result"
@@ -33,13 +35,18 @@ export const useProposalCount = () => {
 
 export const useProposal = (id: number) => {
     const contract = useContract()
+    const { chainId } = useWeb3React()
+    const topics: { [chainId: number]: string } = {
+        [ChainId.ROPSTEN]: "0xbaab6dcd2ae57433cc1372e25bc5139c3bd664075695546fde8821591a226e38",
+        [ChainId.MAINNET]: "0xc35d8343400dc3b6532d132b7a308a52981978daae0cb1f0a2625c3c29fa0ecb"
+    }
     return useWeb3Result<Proposal>(async ({ account, library }) => {
         const proposal = await contract.proposals(id)
         const state = await contract.proposalState(id)
         
         const event = (await library.getLogs({
             address: contract.address,
-            topics: ["0xbaab6dcd2ae57433cc1372e25bc5139c3bd664075695546fde8821591a226e38"],
+            topics: [topics[chainId!]],
             fromBlock: 0,
             toBlock: "latest"
         }))
