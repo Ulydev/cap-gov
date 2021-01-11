@@ -31,12 +31,14 @@ const Settings = () => {
     const allowSpend = async () => {
         const tokenAddress = await (chainId === ChainId.ROPSTEN ? contract.governanceToken() : contract.token())
         const tokenContract = getTokenContract(tokenAddress, account!, library)
-        addPendingTransaction((await tokenContract.approve(contract.address, MaxUint256)).hash)
+        const tx = await tokenContract.approve(contract.address, MaxUint256)
+        addPendingTransaction(tx.hash)
+        return tx
     }
 
     const saveStake = async () => {
         if (needsAllowance) {
-            await allowSpend()
+            await (await allowSpend()).wait()
         }
         const cAmount = CurrencyAmount.ether(JSBI.BigInt(parseEther(amount!)))
         const cStakedCap = CurrencyAmount.ether(stakedCap)
