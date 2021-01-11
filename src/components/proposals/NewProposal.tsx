@@ -4,11 +4,14 @@ import classnames from "classnames"
 import ProposalsHeader from "./ProposalsHeader"
 
 import { useFieldArray, useForm } from "react-hook-form"
-import { FiMinus, FiPlus } from "react-icons/fi"
+import { FiCheck, FiMinus, FiPlus } from "react-icons/fi"
 import { useWeb3Result } from "../../hooks/useWeb3Result"
 import { useContract } from "../../hooks/useContract"
 import { useStoreActions } from "../../state/hooks"
 import { toUtf8Bytes } from "ethers/lib/utils"
+import { AiFillInfoCircle } from "react-icons/ai"
+import { useWeb3React } from "@web3-react/core"
+import { ChainId } from "@uniswap/sdk"
 
 type ProposalValues = {
     description: string
@@ -19,10 +22,12 @@ type ProposalValues = {
         signature: string
         calldata?: string
     }[]
+    expedited?: boolean
 }
 
 const ProposalForm = () => {
-    const { register, control, handleSubmit } = useForm<ProposalValues>({ defaultValues: { operations: [{}] } })
+    const { chainId } = useWeb3React()
+    const { watch, register, control, handleSubmit } = useForm<ProposalValues>({ defaultValues: { operations: [{}], expedited: false } })
     const { fields: operations, append: addOperation, remove: removeOperation } = useFieldArray({ control, name: "operations" })
 
     const contract = useContract()
@@ -37,7 +42,8 @@ const ProposalForm = () => {
             data.operations.map(o => o.value),
             data.operations.map(o => o.signature),
             data.operations.map(o => o.calldata ? toUtf8Bytes(o.calldata) : undefined),
-            data.description
+            data.description,
+            chainId === ChainId.MAINNET ? data.expedited : undefined
         )).hash)
     }
 
@@ -109,6 +115,15 @@ const ProposalForm = () => {
                     }) }
                 </div>
             </div>
+            { chainId === ChainId.MAINNET ? (
+                <div className="flex flex-row justify-between items-center">
+                    <label className="flex-1 flex flex-row items-center" htmlFor={`expedited`}>Expedited voting&nbsp;<a href="https://github.com/capfina/protocol#creating-a-proposal" target="_blank" rel="noopener noreferrer"><AiFillInfoCircle className="text-gray-500" /></a></label>
+                    <div className="relative flex-row items-center justify-center">
+                        <input type="checkbox" className="appearance-none w-6 h-6 border-2 border-green-500 bg-green-900 bg-opacity-25" name={`expedited`} ref={register({ required: false })} />
+                        { watch("expedited") ? <FiCheck className="absolute left-0 top-0 ml-1 mt-1 pointer-events-none text-green-500" /> : null }
+                    </div>
+                </div>
+            ) : null }
             <input type="submit" value="Submit proposal" className="mt-4 p-2 px-4 text-white hover:bg-green-500 bg-transparent border-b-2 border-green-500 transition duration-200" />
         </form>
     )
