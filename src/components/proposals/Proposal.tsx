@@ -105,6 +105,8 @@ const StatusButton: FunctionComponent<{ label: string, onClick: (() => any) | n
 
 const ProposalView: FunctionComponent<{ proposal: ProposalType, full: boolean }> = ({ proposal, full }) => {
 
+    const { chainId } = useWeb3React()
+
     const hasVotes = useMemo(() => !proposal.forVotes.add(proposal.againstVotes).isZero(), [proposal])
     const percentageVoted = useMemo(() => {
         try {
@@ -146,7 +148,10 @@ const ProposalView: FunctionComponent<{ proposal: ProposalType, full: boolean }>
                 </div>
                 <div className="flex flex-row justify-between text-sm mt-8">
                     <span className="text-gray-800">Proposed by</span>
-                    <a className="text-gray-500 flex flex-row items-center space-x-1 hover:text-green-500 transition duration-200" href={`https://ropsten.etherscan.io/address/${proposal.proposer}`} target="_blank" rel="noreferrer noopener">
+                    <a
+                        className="text-gray-500 flex flex-row items-center space-x-1 hover:text-green-500 transition duration-200"
+                        href={`https://${chainId === ChainId.MAINNET ? "" : `${ChainId[chainId!].toLowerCase()}.`}etherscan.io/address/${proposal.proposer}`}
+                        target="_blank" rel="noreferrer noopener">
                         <span>{ formatAccount(proposal.proposer) }</span><RiExternalLinkLine className="text-gray-800" />
                     </a>
                 </div>
