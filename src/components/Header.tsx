@@ -5,7 +5,7 @@ import { useWeb3React } from "@web3-react/core"
 import { useCapBalance } from "../hooks/useCapBalance"
 
 import logo from "../images/logo.svg"
-import { AiOutlinePlusCircle, AiOutlinePoweroff, AiOutlineSetting } from "react-icons/ai"
+import { AiOutlinePlusCircle } from "react-icons/ai"
 import { getTokenContract, useContract } from "../hooks/useContract"
 import { useStoreActions } from "../state/hooks"
 import { toast } from "react-toastify"
