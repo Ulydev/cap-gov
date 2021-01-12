@@ -77,7 +77,7 @@ const VoteButton: FunctionComponent<{ proposal: ProposalType, endTimestamp: numb
             )}>
             <div className="flex flex-col flex-1 border-b-2 border-gray-500 flex-1 text-left pb-1">
                 <span className="text-gray-500">Voting</span>
-                <span className="text-xs text-gray-800 font-normal">ends in { useCountdown(endTimestamp) }</span>
+                <span className="text-xs text-gray-600 font-normal">ends in { useCountdown(endTimestamp) }</span>
             </div>
             { needsAllowance ? (
                 <button onClick={allowSpend} className="text-gray-500 border-b-2 px-4 border-gray-500 hover:text-white hover:bg-gray-500 transition duration-500">Approve CAP</button>
@@ -144,39 +144,39 @@ const ProposalView: FunctionComponent<{ proposal: ProposalType, full: boolean }>
                 <div className="relative flex flex-row justify-between space-x-2">
                     <div className="absolute pattern-dots-sm text-green-500 text-opacity-50 left-0 top-0 w-8 h-8 -ml-2 -mt-1" />
                     <Link to={`/proposal/${proposal.id}`} className="flex-1 font-bold text-white hover:text-green-500" style={{ minHeight: "4rem" }}>{ full ? proposal.description : truncate(proposal.description, 44) }</Link>
-                    <span className="text-gray-800">#{ proposal.id.toNumber() }</span>
+                    <span className="text-gray-600">#{ proposal.id.toNumber() }</span>
                 </div>
                 <div className="flex flex-row justify-between text-sm mt-8">
-                    <span className="text-gray-800">Proposed by</span>
+                    <span className="text-gray-600">Proposed by</span>
                     <a
                         className="text-gray-500 flex flex-row items-center space-x-1 hover:text-green-500 transition duration-200"
                         href={`https://${chainId === ChainId.MAINNET ? "" : `${ChainId[chainId!].toLowerCase()}.`}etherscan.io/address/${proposal.proposer}`}
                         target="_blank" rel="noreferrer noopener">
-                        <span>{ formatAccount(proposal.proposer) }</span><RiExternalLinkLine className="text-gray-800" />
+                        <span>{ formatAccount(proposal.proposer) }</span><RiExternalLinkLine className="text-gray-600" />
                     </a>
                 </div>
                 <div className="flex flex-col mt-2">
                     <div className="flex flex-row justify-between text-sm">
-                        <span className="text-gray-800">Vote start</span>
+                        <span className="text-gray-600">Vote start</span>
                         <span className="text-gray-500">{ startTimestamp ? (new Date(startTimestamp * 1000).toLocaleString()) : null }</span>
                     </div>
                     <div className="flex flex-row justify-between text-sm">
-                        <span className="text-gray-800">Vote end</span>
+                        <span className="text-gray-600">Vote end</span>
                         <span className="text-gray-500">{ endTimestamp ? (new Date(endTimestamp * 1000).toLocaleString()) : null }</span>
                     </div>
                 </div>
                 <div className="flex flex-row justify-between text-sm mt-2">
-                    <span className="text-gray-800">Expires</span>
+                    <span className="text-gray-600">Expires</span>
                     <span className="text-gray-500">{ expirationTimestamp ? (new Date(expirationTimestamp * 1000).toLocaleString()) : null }</span>
                 </div>
             </div>
             <div className="flex flex-col w-full mt-8">
                 <div className="flex flex-row w-full justify-between">
-                    <span className="text-green-900">{ convertBigNumber(proposal.forVotes).toSignificant(4) }{ hasVotes ? ` (${ percentageVoted }%)` : null }</span>
-                    <span className="text-red-900">{ convertBigNumber(proposal.againstVotes).toSignificant(4) }{ hasVotes ? ` (${ 100 - percentageVoted }%)` : null }</span>
+                    <span className="text-green-600">{ convertBigNumber(proposal.forVotes).toSignificant(4) }{ hasVotes ? ` (${ percentageVoted }%)` : null }</span>
+                    <span className="text-red-600">{ convertBigNumber(proposal.againstVotes).toSignificant(4) }{ hasVotes ? ` (${ 100 - percentageVoted }%)` : null }</span>
                 </div>
-                <div className="flex flex-row w-full bg-red-900 items-center" style={{ height: "0.125rem" }}>
-                    <div className="bg-green-900 h-full" style={{ width: `${percentageVoted}%` }} />
+                <div className="flex flex-row w-full bg-red-500 items-center" style={{ height: "0.125rem" }}>
+                    <div className="bg-green-500 h-full" style={{ width: `${percentageVoted}%` }} />
                 </div>
             </div>
             <div className="flex flex-row mt-8 h-16 items-end">

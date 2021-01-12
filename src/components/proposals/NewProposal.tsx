@@ -58,7 +58,7 @@ const ProposalForm = () => {
                 <div className="absolute pattern-dots-sm text-green-500 text-opacity-50 left-0 top-0 w-8 h-8 -ml-4 -mt-1" />
                 <label htmlFor="discoverabilityPeriod" className="mb-2 flex flex-row justify-between">
                     <span>Discoverability period (# blocks)</span>
-                    <span className="text-gray-800">1 hour ~= 272 blocks</span>
+                    <span className="text-gray-600">1 hour ~= 272 blocks</span>
                 </label>
                 <input className="p-2 px-4 text-white bg-green-900 bg-opacity-25 border-green-500 border-b-2" name="discoverabilityPeriod" placeholder="100" type="number" ref={register({ required: true })} />
             </div>
@@ -67,12 +67,12 @@ const ProposalForm = () => {
                     <div className="absolute pattern-dots-sm text-green-500 text-opacity-50 left-0 top-0 w-8 h-8 -ml-4 -mt-1" />
                     <span>Operations</span>
                     <div className="flex flex-row items-center">
-                        <span className="text-gray-800">{ operations.length }</span>
+                        <span className="text-gray-600">{ operations.length }</span>
                         <button
                             type="button"
                             className={classnames(
                                 "border-b-2 p-2 ml-4",
-                                operations.length === maxOperations ? "text-gray-800 border-gray-800" : "text-green-500 border-green-500 hover:bg-green-500 hover:text-white transition duration-200"
+                                operations.length === maxOperations ? "text-gray-600 border-gray-800" : "text-green-500 border-green-500 hover:bg-green-500 hover:text-white transition duration-200"
                             )}
                             disabled={operations.length === maxOperations}
                             onClick={() => { if (operations.length < maxOperations) addOperation({}) }}><FiPlus /></button>
@@ -83,12 +83,12 @@ const ProposalForm = () => {
                         return (
                             <div key={index} className="flex flex-col border-b-2 border-gray-800">
                                 <div className="flex flex-row items-center justify-between mb-2">
-                                    <h1 className="text-gray-800">Operation #{index+1}</h1>
+                                    <h1 className="text-gray-600">Operation #{index+1}</h1>
                                     <button
                                         type="button"
                                         className={classnames(
                                             "border-b-2 p-2 ml-4",
-                                            operations.length === maxOperations ? "text-gray-800 border-gray-800" : "text-red-500 border-red-500 hover:bg-red-500 hover:text-white transition duration-200"
+                                            operations.length === maxOperations ? "text-gray-600 border-gray-800" : "text-red-500 border-red-500 hover:bg-red-500 hover:text-white transition duration-200"
                                         )}
                                         onClick={() => removeOperation(index)}><FiMinus /></button>
                                 </div>
