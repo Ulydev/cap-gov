@@ -5,7 +5,7 @@ import { useWeb3React } from "@web3-react/core"
 import { useCapBalance } from "../hooks/useCapBalance"
 
 import logo from "../images/logo.svg"
-import { AiOutlinePlusCircle, AiOutlinePoweroff, AiOutlineSetting } from "react-icons/ai"
+import { AiOutlinePlusCircle } from "react-icons/ai"
 import { getTokenContract, useContract } from "../hooks/useContract"
 import { useStoreActions } from "../state/hooks"
 import { toast } from "react-toastify"
@@ -52,12 +52,16 @@ const Account = () => {
                 <NavLink
                     to="/settings"
                     className="opacity-50 hover:opacity-100 transition duration-200 text-lg">
-                    <AiOutlineSetting />
+                    <button className="bg-transparent hover:bg-grey-500 text-grey-700 font-semibold text-xs hover:text-white py-1 px-2 border border-grey-500 hover:border-transparent rounded">
+                        Stake
+                    </button>
                 </NavLink>
                 <button
                     onClick={deactivate}
                     className="opacity-50 hover:opacity-100 transition duration-200 text-lg">
-                    <AiOutlinePoweroff />
+                    <button className="bg-transparent hover:bg-grey-500 text-grey-700 font-semibold text-xs hover:text-white py-1 px-2 border border-grey-500 hover:border-transparent rounded">
+                        Disconnect
+                    </button>
                 </button>
             </div>
         </div> 

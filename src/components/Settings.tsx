@@ -60,7 +60,7 @@ const Settings = () => {
                 <div className="absolute pattern-dots-sm text-green-500 text-opacity-50 left-0 top-0 w-8 h-8 -ml-4 -mt-1" />
                 <label htmlFor="stakedCap" className="mb-2 flex flex-row justify-between">
                     <span>Staked CAP</span>
-                    <span className="text-gray-800">Default: 10 CAP</span>
+                    <span className="text-gray-600">Default: 10 CAP</span>
                 </label>
                 <CurrencyInput
                     className="p-2 px-4 text-white bg-green-900 bg-opacity-25 border-green-500 border-b-2"
